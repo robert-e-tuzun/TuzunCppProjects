@@ -7,6 +7,7 @@ set(SOURCE_FILES
     src/PartialKnotSpecManager.cpp
     src/PartitionBuilder.cpp
     src/RepresentativeChecker.cpp
+    src/CandidateCtSpecBuilder.cpp
    )
 
 add_library(PartialKnotSpec ${SOURCE_FILES})

@@ -27,6 +27,7 @@ set(SOURCE_FILES
     src/KComposition.cpp
     src/BinomCoeffTable.cpp
     src/findCompositionsWithFilter.cpp
+    src/Speedometric.cpp
    )
 
 add_library(CombinCommon STATIC ${SOURCE_FILES})

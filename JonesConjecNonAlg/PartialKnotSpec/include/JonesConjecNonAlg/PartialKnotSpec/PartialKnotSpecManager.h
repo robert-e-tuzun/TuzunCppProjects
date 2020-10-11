@@ -10,6 +10,7 @@
 #include "JonesConjecNonAlg/PolyhPrec/I_PolyhPrecManager.h"
 #include "JonesConjecNonAlg/PartialKnotSpec/I_PartialKnotSpecManager.h"
 #include "JonesConjecNonAlg/PartialKnotSpec/I_PartitionBuilder.h"
+#include "JonesConjecNonAlg/PartialKnotSpec/I_CandidateCtSpecBuilder.h"
 
 namespace DT = Tuzun_Util::Datatypes;
 namespace JCPo = Jones_Conjec_NonAlg::Polyh_Prec;
@@ -21,6 +22,7 @@ class PartialKnotSpecManager : public I_PartialKnotSpecManager
    public:
       PartialKnotSpecManager(
           std::shared_ptr<I_PartitionBuilder> partitionBuilder,
+          std::shared_ptr<I_CandidateCtSpecBuilder> candidateCtSpecBuilder,
           std::shared_ptr<JCPo::I_PolyhPrecManager> polyhPrec);
       virtual ~PartialKnotSpecManager();
 
@@ -39,8 +41,13 @@ class PartialKnotSpecManager : public I_PartialKnotSpecManager
       DT::Int32 numPolyh_;
       DT::Int32 numVertices_;
 
+      std::vector<DT::VecInt32> lowPartitions_;
+      std::vector<DT::VecInt32> inBetweenPartitions_;
+      std::vector<std::vector<DT::VecInt32> > highPartitions_;
+
       std::shared_ptr<Tuzun_Util::I_Blackboard> blkbdPtr_;
       std::shared_ptr<I_PartitionBuilder> partitionBuilder_;
+      std::shared_ptr<I_CandidateCtSpecBuilder> candidateCtSpecBuilder_;
       std::shared_ptr<JCPo::I_PolyhPrecManager> polyhPrecManager_;
 };
 

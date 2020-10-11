@@ -31,8 +31,11 @@ namespace Jones_Conjec_NonAlg::Partial_Knot_Spec {
 
 PartialKnotSpecManager::PartialKnotSpecManager(
         std::shared_ptr<I_PartitionBuilder> partitionBuilder,
+        std::shared_ptr<I_CandidateCtSpecBuilder> candidateCtSpecBuilder,
         std::shared_ptr<JCPo::I_PolyhPrecManager> polyhPrecManager)
-: partitionBuilder_(partitionBuilder), polyhPrecManager_(polyhPrecManager)
+: partitionBuilder_(partitionBuilder),
+  candidateCtSpecBuilder_(candidateCtSpecBuilder),
+  polyhPrecManager_(polyhPrecManager)
 {
    curPolyhNum_ = -1;
 }
@@ -77,6 +80,10 @@ void PartialKnotSpecManager::initRunParams()
 
 void PartialKnotSpecManager::buildNcPartitions()
 {
+   partitionBuilder_->computePartitions();
+   lowPartitions_ = partitionBuilder_->getLowPartitions();
+   inBetweenPartitions_ = partitionBuilder_->getInBetweenPartitions();
+   highPartitions_ = partitionBuilder_->getHighPartitions();
 }
 
 //----------------------------------------------------------------

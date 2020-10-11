@@ -11,9 +11,12 @@
 #include <memory>
 
 #include "JonesConjecNonAlg/JonesConjNonAlg/InitializerNonAlg.h"
+
 #include "JonesConjecNonAlg/PolyhPrec/PolyhPrecManager.h"
+
 #include "JonesConjecNonAlg/PartialKnotSpec/RepresentativeChecker.h"
 #include "JonesConjecNonAlg/PartialKnotSpec/PartitionBuilder.h"
+#include "JonesConjecNonAlg/PartialKnotSpec/CandidateCtSpecBuilder.h"
 #include "JonesConjecNonAlg/PartialKnotSpec/PartialKnotSpecManager.h"
 #include "JonesConjecNonAlg/JonesConjNonAlg/JonesConjNonAlgApp.h"
 

@@ -139,7 +139,7 @@ void KComposition::setState(const DT::VecInt32& state)
    k_ = state.size();
 
    n_ = 0;
-   for (DT::Int32 entry : array)
+   for (DT::Int32 entry : array_)
       n_ += entry;
 
    isFirstEntry_ = false;
