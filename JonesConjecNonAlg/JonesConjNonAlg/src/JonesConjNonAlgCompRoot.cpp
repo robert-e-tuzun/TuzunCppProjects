@@ -15,7 +15,9 @@
 #include "JonesConjecNonAlg/JonesConjNonAlg/JonesConjNonAlgCompRoot.h"
 
 namespace JCPa = Jones_Conjec_NonAlg::Partial_Knot_Spec;
-namespace JCPo = Jones_Conjec_NonAlg::Polyh_Prec;
+namespace JCPo = Jones_Conjec_NonAlg::Polyh;
+namespace KCIO = Knot_Common::Input_Output;
+namespace KCCG = Knot_Common::Conway_Graph;
 
 namespace Jones_Conjec_NonAlg::Jones_Conj_NonAlg {
 
@@ -28,19 +30,23 @@ JonesConjNonAlgCompRoot::JonesConjNonAlgCompRoot()
    std::shared_ptr<I_InitializerNonAlg> initializerPtr =
            std::make_shared<InitializerNonAlg>(blackboardPtr);
 
-   std::shared_ptr<JCPo::I_PolyhPrecManager> polyhPrecManagerPtr =
-           std::make_shared<JCPo::PolyhPrecManager>();
+   std::shared_ptr<KCIO::I_PolyhedronReader> polyhedronReaderPtr =
+           std::make_shared<KCIO::PolyhedronReader>();
+   std::shared_ptr<KCCG::I_ConwayLikeGraphFactory> graphFactoryPtr =
+           std::make_shared<KCCG::ConwayLikeGraphFactory>();
+   std::shared_ptr<JCPo::I_PolyhManager> polyhManagerPtr =
+           std::make_shared<JCPo::PolyhManager>(
+                 polyhedronReaderPtr, graphFactoryPtr);
 
    std::shared_ptr<JCPa::I_RepresentativeChecker> representativeCheckerPtr =
            std::make_shared<JCPa::RepresentativeChecker>();
    std::shared_ptr<JCPa::I_PartitionBuilder> partitionBuilderPtr =
            std::make_shared<JCPa::PartitionBuilder>(representativeCheckerPtr);
-   std::shared_ptr<JCPa::I_CandidateCtSpecBuilder> candidateCtSpecBuilderPtr =
-           std::make_shared<JCPa::CandidateCtSpecBuilder>();
+   std::shared_ptr<JCPa::I_PartitionBuilderWrapper> partitionBuilderWrapperPtr
+        = std::make_shared<JCPa::PartitionBuilderWrapper>(partitionBuilderPtr);
+
    std::shared_ptr<JCPa::I_PartialKnotSpecManager> pksManagerPtr =
-           std::make_shared<JCPa::PartialKnotSpecManager>(
-                partitionBuilderPtr, candidateCtSpecBuilderPtr,
-                polyhPrecManagerPtr);
+           std::make_shared<JCPa::PartialKnotSpecManager>(polyhManagerPtr);
 
    app_ = std::make_shared<JonesConjNonAlgApp>(initializerPtr, pksManagerPtr);
 }

@@ -57,8 +57,9 @@ void InitializerNonAlg::processInput()
    std::cin >> numCrossings_
             >> numVertices_
             >> dirPathPolyhData_
-            >> ncLow_
-            >> ncMem_
+            >> largestSmallNc_
+            >> largestNcInMemory_
+            >> numNcPartitionsStoredMax_
            ;
 
    computeDerivedParameters();
@@ -68,8 +69,9 @@ void InitializerNonAlg::processInput()
    runParamI->setNumCrossings(numCrossings_);
    runParamI->setNumVertices(numVertices_);
    runParamI->setDirPathPolyhData(dirPathPolyhData_);
-   runParamI->setNcLow(ncLow_);
-   runParamI->setNcMem(ncMem_);
+   runParamI->setLargestSmallNc(largestSmallNc_);
+   runParamI->setLargestNcInMemory(largestNcInMemory_);
+   runParamI->setNumNcPartitionsStoredMax(numNcPartitionsStoredMax_);
    runParamI->setNcMaxAttainable(ncMaxAttainable_);
 }
 
@@ -88,11 +90,12 @@ void InitializerNonAlg::computeDerivedParameters()
                   numCrossings_ - numVertices_ + 1:
                   numCrossings_ - numVertices_;
 
-//     The actual values for ncLow_ and ncMem_ cannot exceed the maximum
-//     attainable nc (see PartitionBuilder class for more information).
+//     The actual values for largestSmallNc_ and largestNcInMemory_ cannot
+//     exceed the maximum attainable nc (see PartitionBuilder class for
+//     more information).
 
-   ncLow_ = std::min(ncLow_, ncMaxAttainable_);
-   ncMem_ = std::min(ncMem_, ncMaxAttainable_);
+   largestSmallNc_ = std::min(largestSmallNc_, ncMaxAttainable_);
+   largestNcInMemory_ = std::min(largestNcInMemory_, ncMaxAttainable_);
 }
 
 //--------------------------------------------------------------------

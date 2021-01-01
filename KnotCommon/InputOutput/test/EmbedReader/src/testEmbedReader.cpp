@@ -34,11 +34,11 @@ std::vector<ConwayPolyh> readPolyhsGot(DT::Int32 numVertices,
 
    DT::String prefix = "NumNonCSPolyh";
    DT::Int32 numPolyh =
-       Knot_Common::Polyh_IO::getNumPolyh(dirPolyh, prefix, numVertices);
+       Knot_Common::Input_Output::getNumPolyh(dirPolyh, prefix, numVertices);
 
 //     Read in Conway polyhedra and return.
 
-   Knot_Common::Polyh_IO::EmbedReader embedReader;
+   Knot_Common::Input_Output::EmbedReader embedReader;
    embedReader.init(numVertices, dirPolyh);
 
    for (DT::Int32 n=0; n<numPolyh; ++n) {
@@ -60,7 +60,7 @@ std::vector<ConwayPolyh> readPolyhsExpected(int numVertices,
 
    DT::String prefix = "NumNonCSPolyh";
    DT::Int32 numPolyh =
-       Knot_Common::Polyh_IO::getNumPolyh(dirPolyh, prefix, numVertices);
+       Knot_Common::Input_Output::getNumPolyh(dirPolyh, prefix, numVertices);
 
 //     Read in Conway polyhedra and return.
 
@@ -152,7 +152,7 @@ BOOST_AUTO_TEST_CASE( correct10 )
            readPolyhsExpected(numVertices, dirPolyh, dirInput);
    BOOST_CHECK( polyhsGot == polyhsExpected);
 
-   Knot_Common::Polyh_IO::EmbedReader embedReader;
+   Knot_Common::Input_Output::EmbedReader embedReader;
    embedReader.init(numVertices, dirPolyh);
 
    ConwayPolyh p2 = embedReader.readPolyh(2);

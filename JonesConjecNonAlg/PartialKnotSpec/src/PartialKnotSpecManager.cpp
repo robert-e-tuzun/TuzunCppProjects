@@ -14,8 +14,7 @@
 #include <memory>
 #include <algorithm>
 
-#include "JonesConjecNonAlg/PolyhPrec/I_PolyhPrecManager.h"
-//#include "KnotCommon/InputOutput/EmbedReader.h"
+#include "JonesConjecNonAlg/Polyh/I_PolyhManager.h"
 #include "JonesConjecNonAlg/PartialKnotSpec/PartialKnotSpecManager.h"
 
 #include "JonesConjecNonAlg/BlkbdJonesConjNonAlg/BlkbdRunParamsNonAlg.h"
@@ -23,19 +22,15 @@
 
 namespace DT = Tuzun_Util::Datatypes;
 namespace JCB = Jones_Conjec_NonAlg::Blkbd_Jones_Conj_NonAlg;
-namespace JCPo = Jones_Conjec_NonAlg::Polyh_Prec;
+namespace JCPo = Jones_Conjec_NonAlg::Polyh;
 
 namespace Jones_Conjec_NonAlg::Partial_Knot_Spec {
 
 //----------------------------------------------------------------
 
 PartialKnotSpecManager::PartialKnotSpecManager(
-        std::shared_ptr<I_PartitionBuilder> partitionBuilder,
-        std::shared_ptr<I_CandidateCtSpecBuilder> candidateCtSpecBuilder,
-        std::shared_ptr<JCPo::I_PolyhPrecManager> polyhPrecManager)
-: partitionBuilder_(partitionBuilder),
-  candidateCtSpecBuilder_(candidateCtSpecBuilder),
-  polyhPrecManager_(polyhPrecManager)
+        std::shared_ptr<JCPo::I_PolyhManager> polyhManager)
+: polyhManager_(polyhManager)
 {
    curPolyhNum_ = -1;
 }
@@ -57,8 +52,7 @@ void PartialKnotSpecManager::prepareForUse(
    blkbdPtr_ = blkbdPtr;
    initRunParams();
 
-   partitionBuilder_->prepareForUse(blkbdPtr_);
-   polyhPrecManager_->prepareForUse(blkbdPtr_);
+   polyhManager_->prepareForUse(blkbdPtr_);
 }
 
 //----------------------------------------------------------------
@@ -78,20 +72,20 @@ void PartialKnotSpecManager::initRunParams()
 
 //----------------------------------------------------------------
 
-void PartialKnotSpecManager::buildNcPartitions()
-{
-   partitionBuilder_->computePartitions();
-   lowPartitions_ = partitionBuilder_->getLowPartitions();
-   inBetweenPartitions_ = partitionBuilder_->getInBetweenPartitions();
-   highPartitions_ = partitionBuilder_->getHighPartitions();
-}
-
-//----------------------------------------------------------------
-
 void PartialKnotSpecManager::loopThroughPolyhedra()
 {
-//     Get number of Conway polyhedra.
-   numPolyh_ = polyhPrecManager_->getNumPolyh();
+//     Get number of Conway polyhedra, then loop through them.
+   numPolyh_ = polyhManager_->getNumPolyh();
+   for (int i=0; i<numPolyh_; ++i) {
+      if (polyhManager_->shouldPerformCalcsForPolyhedron(i)) {
+         polyhManager_->finishPreppingPolyhedron();
+         std::cout << "Polyhedron " << i << " calcs should proceed."
+                   << std::endl;
+      }
+      else
+         std::cout << "Polyhedron " << i << " calcs should not proceed."
+                   << std::endl;
+   }
 }
 
 //----------------------------------------------------------------

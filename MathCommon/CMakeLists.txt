@@ -25,6 +25,8 @@ find_package(Boost REQUIRED)
 
 set(SOURCE_FILES
     src/integerFactorsOf.cpp
+    src/UndirectedGraph.cpp
+    src/UndirectedPlanarGraph.cpp
    )
 
 add_library(MathCommon STATIC ${SOURCE_FILES})

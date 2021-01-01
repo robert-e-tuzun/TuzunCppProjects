@@ -33,7 +33,7 @@ find_package(Boost REQUIRED)
 # may depend on upper, but not vice versa).
 enable_testing()
 add_subdirectory(BlkbdJonesConjNonAlg)
-add_subdirectory(PolyhPrec)
+add_subdirectory(Polyh)
 add_subdirectory(PartialKnotSpec)
 add_subdirectory(JonesConjNonAlg)
 

@@ -7,11 +7,13 @@
 
 #pragma once
 
+#include <fstream>
+
 #include "KnotCommon/InputOutput/I_EmbedReader.h"
 
 namespace DT = Tuzun_Util::Datatypes;
 
-namespace Knot_Common::Polyh_IO {
+namespace Knot_Common::Input_Output {
 
 class EmbedReader : public I_EmbedReader
 {
@@ -38,5 +40,5 @@ class EmbedReader : public I_EmbedReader
       std::fstream eFile_;
 };
 
-} // namespace Knot_Common::Polyh_IO
+} // namespace Knot_Common::Input_Output
 

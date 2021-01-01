@@ -9,6 +9,9 @@ project(KnotCommon VERSION 1.0 LANGUAGES CXX)
 find_package(TuzunUtil
              PATHS ${CMAKE_INSTALL_PREFIX}/lib/cmake/TuzunUtil
             )
+find_package(MathCommon
+             PATHS ${CMAKE_INSTALL_PREFIX}/lib/cmake/MathCommon
+            )
 
 # Enable the finding of InstallExportLib.cmake by adding the directory it's
 # in to CMAKE_MODULE_PATH.

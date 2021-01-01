@@ -31,9 +31,10 @@ class InitializerNonAlg : public I_InitializerNonAlg
 
       DT::Int32 numCrossings_;
       DT::Int32 numVertices_;
-      DT::Int32 ncLow_;
-      DT::Int32 ncMem_;
+      DT::Int32 largestSmallNc_;
+      DT::Int32 largestNcInMemory_;
       DT::Int32 ncMaxAttainable_;
+      DT::Int32 numNcPartitionsStoredMax_;
 
       DT::String dirPathPolyhData_;
 

@@ -11,7 +11,7 @@
 
 namespace DT = Tuzun_Util::Datatypes;
 
-namespace Knot_Common::Polyh_IO {
+namespace Knot_Common::Input_Output {
 
 class I_EmbedReader
 {
@@ -27,5 +27,5 @@ class I_EmbedReader
    private:
 };
 
-} // namespace Knot_Common::Polyh_IO
+} // namespace Knot_Common::Input_Output
 

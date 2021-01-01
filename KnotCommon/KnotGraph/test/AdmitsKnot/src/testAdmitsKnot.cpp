@@ -14,7 +14,7 @@
 #include <deque>
 #include <string>
 
-#include "KnotCommon/KnotGraph/LoopCountGraph.h"
+#include "KnotCommon/KnotGraph/ConwayLikeGraph.h"
 
 namespace DT = Tuzun_Util::Datatypes;
 
@@ -63,10 +63,10 @@ BOOST_AUTO_TEST_CASE( correct6 )
 {
    ConwayPolyh polyh = getPolyhDesired(6);
 
-   Knot_Common::Graph::LoopCountGraph lcg(polyh);
+   Knot_Common::Conway_Graph::ConwayLikeGraph clg(polyh);
    DT::VecInt32 setOfCt = { 1, 1, 1, 1, 1, 1 };
-   DT::Int32 numLoops = lcg.numLoopsForCts(setOfCt);
-   bool admitsKnot = lcg.admitsKnotForCts(setOfCt);
+   DT::Int32 numLoops = clg.numLoopsForCts(setOfCt);
+   bool admitsKnot = clg.admitsKnotForCts(setOfCt);
 
    BOOST_CHECK(numLoops == 3);
    BOOST_CHECK(admitsKnot == false);
@@ -78,10 +78,10 @@ BOOST_AUTO_TEST_CASE( correct8 )
 {
    ConwayPolyh polyh = getPolyhDesired(8);
 
-   Knot_Common::Graph::LoopCountGraph lcg(polyh);
+   Knot_Common::Conway_Graph::ConwayLikeGraph clg(polyh);
    DT::VecInt32 setOfCt = { 1, 1, 1, 1, 1, 1, 1, 1 };
-   DT::Int32 numLoops = lcg.numLoopsForCts(setOfCt);
-   bool admitsKnot = lcg.admitsKnotForCts(setOfCt);
+   DT::Int32 numLoops = clg.numLoopsForCts(setOfCt);
+   bool admitsKnot = clg.admitsKnotForCts(setOfCt);
 
    BOOST_CHECK(numLoops == 1);
    BOOST_CHECK(admitsKnot == true);

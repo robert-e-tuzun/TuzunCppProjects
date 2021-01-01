@@ -11,7 +11,7 @@
 
 namespace DT = Tuzun_Util::Datatypes;
 
-namespace Knot_Common::Polyh_IO {
+namespace Knot_Common::Input_Output {
 
 DT::Int32 getNumPolyh(const DT::String& dirPathPolyhData,
                 const DT::String& prefix, DT::Int32 numVertices);

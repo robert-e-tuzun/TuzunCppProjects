@@ -46,16 +46,24 @@ BlkbdRunParamsNonAlg::setDirPathPolyhData(const DT::String& dirPathPolyhData_x)
 
 //--------------------------------------------------------------
 
-void BlkbdRunParamsNonAlg::setNcLow(DT::Int32 ncLow_x)
+void BlkbdRunParamsNonAlg::setLargestSmallNc(DT::Int32 largestSmallNc_x)
 {
-   ncLow_ = ncLow_x;
+   largestSmallNc_ = largestSmallNc_x;
 }
 
 //--------------------------------------------------------------
 
-void BlkbdRunParamsNonAlg::setNcMem(DT::Int32 ncMem_x)
+void BlkbdRunParamsNonAlg::setLargestNcInMemory(DT::Int32 largestNcInMemory_x)
 {
-   ncMem_ = ncMem_x;
+   largestNcInMemory_ = largestNcInMemory_x;
+}
+
+//--------------------------------------------------------------
+
+void BlkbdRunParamsNonAlg::setNumNcPartitionsStoredMax(
+         DT::Int32 numNcPartitionsStoredMax_x)
+{
+   numNcPartitionsStoredMax_ = numNcPartitionsStoredMax_x;
 }
 
 //--------------------------------------------------------------
@@ -88,16 +96,23 @@ DT::String BlkbdRunParamsNonAlg::getDirPathPolyhData() const
 
 //--------------------------------------------------------------
 
-DT::Int32 BlkbdRunParamsNonAlg::getNcLow() const
+DT::Int32 BlkbdRunParamsNonAlg::getLargestSmallNc() const
 {
-   return ncLow_;
+   return largestSmallNc_;
 }
 
 //--------------------------------------------------------------
 
-DT::Int32 BlkbdRunParamsNonAlg::getNcMem() const
+DT::Int32 BlkbdRunParamsNonAlg::getLargestNcInMemory() const
 {
-   return ncMem_;
+   return largestNcInMemory_;
+}
+
+//--------------------------------------------------------------
+
+DT::Int32 BlkbdRunParamsNonAlg::getNumNcPartitionsStoredMax() const
+{
+   return numNcPartitionsStoredMax_;
 }
 
 //--------------------------------------------------------------

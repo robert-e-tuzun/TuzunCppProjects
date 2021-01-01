@@ -18,7 +18,6 @@ class I_PartialKnotSpecManager
 
       virtual void prepareForUse(
            std::shared_ptr<Tuzun_Util::I_Blackboard> blkbdPtr) = 0;
-      virtual void buildNcPartitions() = 0;
       virtual void loopThroughPolyhedra() = 0;
 
    private:

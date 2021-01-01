@@ -1,7 +1,6 @@
 //--------------------------------------------------------------------
 //
-//     Composition root object for Jones conjecture application
-//     (declaration).
+//     Composition root object for Jones conjecture application.
 //
 //     Bob Tuzun
 //
@@ -12,11 +11,14 @@
 
 #include "JonesConjecNonAlg/JonesConjNonAlg/InitializerNonAlg.h"
 
-#include "JonesConjecNonAlg/PolyhPrec/PolyhPrecManager.h"
+#include "KnotCommon/InputOutput/PolyhedronReader.h"
+#include "KnotCommon/KnotGraph/ConwayLikeGraphFactory.h"
+#include "JonesConjecNonAlg/Polyh/PolyhManager.h"
 
 #include "JonesConjecNonAlg/PartialKnotSpec/RepresentativeChecker.h"
 #include "JonesConjecNonAlg/PartialKnotSpec/PartitionBuilder.h"
-#include "JonesConjecNonAlg/PartialKnotSpec/CandidateCtSpecBuilder.h"
+#include "JonesConjecNonAlg/PartialKnotSpec/PartitionBuilderWrapper.h"
+
 #include "JonesConjecNonAlg/PartialKnotSpec/PartialKnotSpecManager.h"
 #include "JonesConjecNonAlg/JonesConjNonAlg/JonesConjNonAlgApp.h"
 

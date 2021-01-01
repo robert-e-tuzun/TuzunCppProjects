@@ -10,6 +10,7 @@ project(InputOutput VERSION 1.0 LANGUAGES CXX)
 set(SOURCE_FILES
     src/EmbedReader.cpp
     src/getNumPolyh.cpp
+    src/PolyhedronReader.cpp
    )
 
 add_library(InputOutput ${SOURCE_FILES})

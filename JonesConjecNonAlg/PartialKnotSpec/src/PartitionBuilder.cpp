@@ -49,13 +49,17 @@ PartitionBuilder::~PartitionBuilder()
 //     Prepare this object for use.
 //
 
-void PartitionBuilder::prepareForUse(
-       std::shared_ptr<Tuzun_Util::I_Blackboard> blkbdPtr)
+void PartitionBuilder::prepareForUse(DT::Int32 numCrossings,
+       DT::Int32 numVertices, DT::Int32 largestSmallNc,
+       DT::Int32 largestNcInMemory, DT::Int32 ncMaxAttainable)
 {
-   blkbdPtr_ = blkbdPtr;
+   numCrossings_ = numCrossings;
+   numVertices_ = numVertices;
+   largestSmallNc_ = largestSmallNc;
+   largestNcInMemory_ = largestNcInMemory;
+   ncMaxAttainable_ = ncMaxAttainable;
 
    binomCoeffTable_ = std::make_shared<Combin_Common::BinomCoeffTable>();
-   initRunParams();
 
 //     Possible partition periods are integer factors of numVertices_.
 //     Erase the last factor, numVertices_, which has special treatment later.
@@ -67,44 +71,29 @@ void PartitionBuilder::prepareForUse(
 
 //----------------------------------------------------------------
 
-void PartitionBuilder::initRunParams()
-{
-//     Retrieve run parameters.
-   std::shared_ptr<JCB::BlkbdRunParamsNonAlg> runParamI =
-      JCB::GetPointerRunParamsNonAlg(blkbdPtr_);
-
-   numCrossings_ = runParamI->getNumCrossings();
-   numVertices_ = runParamI->getNumVertices();
-   ncLow_ = runParamI->getNcLow();
-   ncMem_ = runParamI->getNcMem();
-   ncMaxAttainable_ = runParamI->getNcMaxAttainable();
-}
-
-//----------------------------------------------------------------
-
 void PartitionBuilder::computePartitions()
 {
 //     Compute binomial coefficient table.
    binomCoeffTable_->init(numCrossings_-1);
 
-//     Compute partitions with nc_i <= ncLow.
+//     Compute partitions with nc_i <= largestSmallNc.
    lowPartitions_.clear();
    computeLowPartitions();
 
-//     Compute partitions with ncLow < nc_i <= ncMem and last nc = ncMax,
-//     where ncMax = max { nc_i }.
+//     Compute partitions with largestSmallNc < nc_i <= largestNcInMemory and
+//     last nc = ncMax, where ncMax = max { nc_i }.
    inBetweenPartitions_.clear();
    inBetweenPartitionPeriods_.clear();
-   if (ncLow_ < ncMem_) {
+   if (largestSmallNc_ < largestNcInMemory_) {
       computeInBetweenPartitions();
       inBetweenPartitionPeriods_ =
            computePartitionPeriods(inBetweenPartitions_);
    }
 
-//     Compute partitions with nc_max > ncMem and last nc = ncMax.
+//     Compute partitions with nc_max > largestNcInMemory and last nc = ncMax.
    highPartitions_.clear();
    highPartitionPeriods_.clear();
-   if (ncMem_ < ncMaxAttainable_) {
+   if (largestNcInMemory_ < ncMaxAttainable_) {
       computeHighPartitions();
       for (const std::vector<DT::VecInt32>& h : highPartitions_) {
          DT::VecInt32 hPeriods = computePartitionPeriods(h);
@@ -117,15 +106,18 @@ void PartitionBuilder::computePartitions()
 
 void PartitionBuilder::computeLowPartitions()
 {
-//     Positive k-partitions of n with max element <= ncLow_ are
-//     bijective with k-compositions of (n-k) with max element <= (ncLow_-1).
+//     Positive k-partitions of n with max element <= largestSmallNc_ are
+//     bijective with k-compositions of (n-k) with max element <=
+//     (largestSmallNc_-1).
 
-   DT::Int32 ncLow = ncLow_;  // Using ncLow in lambda prevents compile error.
+//     Using largestSmallNc in lambda prevents compile error.
+   DT::Int32 largestSmallNc = largestSmallNc_;
    lowPartitions_ = findCompositionsWithFilter(
          numVertices_, numCrossings_-numVertices_, binomCoeffTable_,
-               [ncLow](const DT::VecInt32& v)
+               [largestSmallNc](const DT::VecInt32& v)
                {
-                  return (*std::max_element(v.begin(), v.end()) <= (ncLow-1));
+                  return (*std::max_element(v.begin(), v.end()) <=
+                          (largestSmallNc-1));
                });
 
 //     The bijection consists of adding/subtracting 1 to/from each entry.
@@ -144,19 +136,21 @@ void PartitionBuilder::computeInBetweenPartitions()
 {
 //     Let ncMax be the maximum element in { nc_i }.
 //     Positive k-partitions of n with nc_k = ncMax and
-//     ncLow_ < ncMax <= ncMem_ are bijective with
+//     largestSmallNc_ < ncMax <= largestNcInMemory_ are bijective with
 //     k-compositions of (n-k) with nc_k = ncMax and
-//     ncLow_-1 < ncMax <= ncMem_-1.
+//     largestSmallNc_-1 < ncMax <= largestNcInMemory_-1.
 
-   DT::Int32 ncLow = ncLow_;  // Using ncLow in lambda prevents compile error.
-   DT::Int32 ncMem = ncMem_;  // Similar for ncMem.
+//     Using largestSmallNc in lambda prevents compile error.
+//     Similar for largestNcInMemory.
+   DT::Int32 largestSmallNc = largestSmallNc_;
+   DT::Int32 largestNcInMemory = largestNcInMemory_;
    inBetweenPartitions_ = findCompositionsWithFilter(
          numVertices_, numCrossings_-numVertices_, binomCoeffTable_,
-               [ncLow, ncMem](const DT::VecInt32& v)
+               [largestSmallNc, largestNcInMemory](const DT::VecInt32& v)
                {
                   DT::Int32 ncMax = *std::max_element(v.begin(), v.end());
-                  return ((v.back() == ncMax) && ((ncLow-1) < ncMax) &&
-                          (ncMax <= (ncMem-1)));
+                  return ((v.back() == ncMax) && ((largestSmallNc-1) < ncMax) &&
+                          (ncMax <= (largestNcInMemory-1)));
                });
 
 //     Remove partitions that are not the representatives of their sets
@@ -192,6 +186,8 @@ DT::VecInt32 PartitionBuilder::computePartitionPeriods(
    for (const DT::VecInt32& p : partitions) {
       partitionPeriods.push_back(period(p));
    }
+
+   return DT::VecInt32(partitionPeriods);
 }
 
 //----------------------------------------------------------------
@@ -215,10 +211,11 @@ void PartitionBuilder::computeHighPartitions()
 {
    auto repChecker = representativeChecker_;
 
-//     Positive k-partitions of n with nc_k > ncMem are bijective with
-//     (k-1)-compositions of (n - nc_k - (k-1)).
+//     Positive k-partitions of n with nc_k > largestNcInMemory are bijective
+//     with (k-1)-compositions of (n - nc_k - (k-1)).
 
-   for (DT::Int32 ncLast=(ncMem_+1); ncLast<=ncMaxAttainable_; ++ncLast) {
+   for (DT::Int32 ncLast=(largestNcInMemory_+1); ncLast<=ncMaxAttainable_;
+                   ++ncLast) {
       std::vector<DT::VecInt32> compositions = findCompositionsWithFilter(
          numVertices_, numCrossings_-ncLast-numVertices_+1, binomCoeffTable_,
                [](const DT::VecInt32& v)

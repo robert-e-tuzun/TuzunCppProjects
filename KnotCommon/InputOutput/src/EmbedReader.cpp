@@ -17,7 +17,7 @@
 
 namespace DT = Tuzun_Util::Datatypes;
 
-namespace Knot_Common::Polyh_IO {
+namespace Knot_Common::Input_Output {
 
 //----------------------------------------------------------------
 
@@ -119,5 +119,5 @@ std::vector<DT::VecInt32> EmbedReader::readPolyh(DT::Int32 polyhNum)
 
 //----------------------------------------------------------------
 
-} // namespace Knot_Common::Polyh_IO
+} // namespace Knot_Common::Input_Output
 

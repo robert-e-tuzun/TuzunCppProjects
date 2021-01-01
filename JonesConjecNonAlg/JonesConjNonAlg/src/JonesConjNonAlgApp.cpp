@@ -54,7 +54,6 @@ void JonesConjNonAlgApp::runApplication()
 //     are built, and from which the calculation engine and its setup are
 //     invoked.
 
-   pksManagerPtr_->buildNcPartitions();
    pksManagerPtr_->loopThroughPolyhedra();
 }
 

@@ -19,7 +19,8 @@ target_link_libraries(JonesConjNonAlg
                       MathCommon
                       BlkbdJonesConjNonAlg
                       PartialKnotSpec
-                      PolyhPrec
+                      Polyh
+                      KnotGraph
                      )
 
 message(STATUS "${PROJECT_SOURCE_DIR}/include")
@@ -27,8 +28,9 @@ message(STATUS "${CMAKE_SOURCE_DIR}/include")
 
 target_include_directories(JonesConjNonAlg
     PRIVATE ${CMAKE_SOURCE_DIR}/BlkbdJonesConjNonAlg/include
-    PRIVATE ${CMAKE_SOURCE_DIR}/PolyhPrec/include
+    PRIVATE ${CMAKE_SOURCE_DIR}/Polyh/include
     PRIVATE ${CMAKE_SOURCE_DIR}/PartialKnotSpec/include
+    PRIVATE ${CMAKE_SOURCE_DIR}/KnotGraph/include
     PRIVATE ${PROJECT_SOURCE_DIR}/include
     PRIVATE ${CMAKE_SOURCE_DIR}/include
 )
