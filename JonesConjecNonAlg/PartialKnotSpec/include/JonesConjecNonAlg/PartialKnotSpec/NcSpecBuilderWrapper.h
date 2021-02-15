@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------
 //
-//     Wrapper for partition builder for partial knot specs.
+//     Wrapper for nc spec builder for partial knot specs.
 //
 //     Bob Tuzun
 //
@@ -8,19 +8,19 @@
 #pragma once
 
 #include "TuzunUtil/I_Blackboard.h"
-#include "JonesConjecNonAlg/PartialKnotSpec/I_PartitionBuilderWrapper.h"
-#include "JonesConjecNonAlg/PartialKnotSpec/I_PartitionBuilder.h"
+#include "JonesConjecNonAlg/PartialKnotSpec/I_NcSpecBuilderWrapper.h"
+#include "JonesConjecNonAlg/PartialKnotSpec/I_NcSpecBuilder.h"
 
 namespace DT = Tuzun_Util::Datatypes;
 
 namespace Jones_Conjec_NonAlg::Partial_Knot_Spec {
 
-class PartitionBuilderWrapper : public I_PartitionBuilderWrapper
+class NcSpecBuilderWrapper : public I_NcSpecBuilderWrapper
 {
    public:
-      PartitionBuilderWrapper(
-            std::shared_ptr<I_PartitionBuilder> partitionBuilder);
-      ~PartitionBuilderWrapper();
+      NcSpecBuilderWrapper(
+            std::shared_ptr<I_NcSpecBuilder> ncSpecBuilder);
+      ~NcSpecBuilderWrapper();
 
       virtual void prepareForUse(
             std::shared_ptr<Tuzun_Util::I_Blackboard> blkbdPtr);
@@ -36,7 +36,7 @@ class PartitionBuilderWrapper : public I_PartitionBuilderWrapper
       void initRunParams();
 
       std::shared_ptr<Tuzun_Util::I_Blackboard> blkbdPtr_;
-      std::shared_ptr<I_PartitionBuilder> partitionBuilder_;
+      std::shared_ptr<I_NcSpecBuilder> ncSpecBuilder_;
 
       DT::Int32 largestSmallNc_;
       DT::Int32 largestNcInMemory_;

@@ -81,11 +81,39 @@ void PartialKnotSpecManager::loopThroughPolyhedra()
          polyhManager_->finishPreppingPolyhedron();
          std::cout << "Polyhedron " << i << " calcs should proceed."
                    << std::endl;
+         loopThroughPartialKnotSpecChunks();
       }
       else
          std::cout << "Polyhedron " << i << " calcs should not proceed."
                    << std::endl;
    }
+}
+
+//----------------------------------------------------------------
+
+void PartialKnotSpecManager::loopThroughPartialKnotSpecChunks()
+{
+   if (polyhManager_->polyhedronHasDnSymmetry())
+      performDnSymmetrySpecificLooping();
+   else
+      performGeneralSymmetryLooping();
+}
+
+//----------------------------------------------------------------
+
+void PartialKnotSpecManager::performDnSymmetrySpecificLooping()
+{
+//     TODO: Implement performDnSymmetrySpecificLooping.
+}
+
+//----------------------------------------------------------------
+
+void PartialKnotSpecManager::performGeneralSymmetryLooping()
+{
+   bool done = false;
+   do {
+   }
+   while (! done);
 }
 
 //----------------------------------------------------------------

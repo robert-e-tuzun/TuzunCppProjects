@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------
 //
-//     Wrapper for partition builder for partial knot specs (interface class).
+//     Wrapper for nc spec builder for partial knot specs (interface class).
 //
 //     Bob Tuzun
 //
@@ -8,16 +8,16 @@
 #pragma once
 
 #include "TuzunUtil/I_Blackboard.h"
-#include "JonesConjecNonAlg/PartialKnotSpec/I_PartitionBuilder.h"
+#include "JonesConjecNonAlg/PartialKnotSpec/I_NcSpecBuilder.h"
 
 namespace DT = Tuzun_Util::Datatypes;
 
 namespace Jones_Conjec_NonAlg::Partial_Knot_Spec {
 
-class I_PartitionBuilderWrapper
+class I_NcSpecBuilderWrapper
 {
    public:
-      virtual ~I_PartitionBuilderWrapper() {};
+      virtual ~I_NcSpecBuilderWrapper() {};
 
       virtual void prepareForUse(
             std::shared_ptr<Tuzun_Util::I_Blackboard> blkbdPtr) = 0;

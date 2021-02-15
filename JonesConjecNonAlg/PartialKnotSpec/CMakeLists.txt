@@ -5,10 +5,13 @@ project(PartialKnotSpec VERSION 1.0 LANGUAGES CXX)
 
 set(SOURCE_FILES
     src/PartialKnotSpecManager.cpp
-    src/PartitionBuilder.cpp
-    src/PartitionBuilderWrapper.cpp
-    src/RepresentativeChecker.cpp
-    src/CandidateCtSpecBuilder.cpp
+#    src/NcSpecBuilder.cpp
+#    src/NcSpecBuilderWrapper.cpp
+    src/SmallNcSpecBuilder.cpp
+    src/SmallNcSpecManager.cpp
+    src/MediumNcSpecBuilder.cpp
+    src/MediumNcSpecManager.cpp
+#    src/CandidateCtSpecBuilder.cpp
    )
 
 add_library(PartialKnotSpec ${SOURCE_FILES})

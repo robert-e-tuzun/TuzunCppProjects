@@ -38,13 +38,6 @@ JonesConjNonAlgCompRoot::JonesConjNonAlgCompRoot()
            std::make_shared<JCPo::PolyhManager>(
                  polyhedronReaderPtr, graphFactoryPtr);
 
-   std::shared_ptr<JCPa::I_RepresentativeChecker> representativeCheckerPtr =
-           std::make_shared<JCPa::RepresentativeChecker>();
-   std::shared_ptr<JCPa::I_PartitionBuilder> partitionBuilderPtr =
-           std::make_shared<JCPa::PartitionBuilder>(representativeCheckerPtr);
-   std::shared_ptr<JCPa::I_PartitionBuilderWrapper> partitionBuilderWrapperPtr
-        = std::make_shared<JCPa::PartitionBuilderWrapper>(partitionBuilderPtr);
-
    std::shared_ptr<JCPa::I_PartialKnotSpecManager> pksManagerPtr =
            std::make_shared<JCPa::PartialKnotSpecManager>(polyhManagerPtr);
 

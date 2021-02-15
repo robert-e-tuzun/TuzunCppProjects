@@ -1,6 +1,6 @@
 //----------------------------------------------------------------
 //
-//     Partition builder for partial knot specs (implementation).
+//     Nc specification builder for partial knot specs (implementation).
 //
 //     Bob Tuzun
 //
@@ -17,8 +17,8 @@
 #include "MathCommon/integerFactorsOf.h"
 
 #include "CombinCommon/KComposition.h"
-#include "CombinCommon/findCompositionsWithFilter.h"
-#include "JonesConjecNonAlg/PartialKnotSpec/PartitionBuilder.h"
+#include "CombinCommon/findSomeCompositionsWithFilter.h"
+#include "JonesConjecNonAlg/PartialKnotSpec/NcSpecBuilder.h"
 
 #include "JonesConjecNonAlg/BlkbdJonesConjNonAlg/BlkbdRunParamsNonAlg.h"
 #include "JonesConjecNonAlg/BlkbdJonesConjNonAlg/GetPointerRunParamsNonAlg.h"
@@ -32,15 +32,13 @@ namespace Jones_Conjec_NonAlg::Partial_Knot_Spec {
 
 //----------------------------------------------------------------
 
-PartitionBuilder::PartitionBuilder(
-       std::shared_ptr<I_RepresentativeChecker> representativeChecker)
-:representativeChecker_(representativeChecker)
+NcSpecBuilder::NcSpecBuilder()
 {
 }
 
 //----------------------------------------------------------------
 
-PartitionBuilder::~PartitionBuilder()
+NcSpecBuilder::~NcSpecBuilder()
 {
 }
 
@@ -49,15 +47,17 @@ PartitionBuilder::~PartitionBuilder()
 //     Prepare this object for use.
 //
 
-void PartitionBuilder::prepareForUse(DT::Int32 numCrossings,
+void NcSpecBuilder::prepareForUse(DT::Int32 numCrossings,
        DT::Int32 numVertices, DT::Int32 largestSmallNc,
-       DT::Int32 largestNcInMemory, DT::Int32 ncMaxAttainable)
+       DT::Int32 largestNcInMemory, DT::Int32 ncMaxAttainable,
+       DT::Int32 numNcPartitionsStoredMax)
 {
    numCrossings_ = numCrossings;
    numVertices_ = numVertices;
    largestSmallNc_ = largestSmallNc;
    largestNcInMemory_ = largestNcInMemory;
    ncMaxAttainable_ = ncMaxAttainable;
+   numNcPartitionsStoredMax_ = numNcPartitionsStoredMax;
 
    binomCoeffTable_ = std::make_shared<Combin_Common::BinomCoeffTable>();
 
@@ -71,7 +71,7 @@ void PartitionBuilder::prepareForUse(DT::Int32 numCrossings,
 
 //----------------------------------------------------------------
 
-void PartitionBuilder::computePartitions()
+void NcSpecBuilder::computePartitions()
 {
 //     Compute binomial coefficient table.
    binomCoeffTable_->init(numCrossings_-1);
@@ -104,7 +104,7 @@ void PartitionBuilder::computePartitions()
 
 //----------------------------------------------------------------
 
-void PartitionBuilder::computeLowPartitions()
+void NcSpecBuilder::computeLowPartitions()
 {
 //     Positive k-partitions of n with max element <= largestSmallNc_ are
 //     bijective with k-compositions of (n-k) with max element <=
@@ -132,7 +132,7 @@ void PartitionBuilder::computeLowPartitions()
 
 //----------------------------------------------------------------
 
-void PartitionBuilder::computeInBetweenPartitions()
+void NcSpecBuilder::computeInBetweenPartitions()
 {
 //     Let ncMax be the maximum element in { nc_i }.
 //     Positive k-partitions of n with nc_k = ncMax and
@@ -177,7 +177,7 @@ void PartitionBuilder::computeInBetweenPartitions()
 
 //----------------------------------------------------------------
 
-DT::VecInt32 PartitionBuilder::computePartitionPeriods(
+DT::VecInt32 NcSpecBuilder::computePartitionPeriods(
         const std::vector<DT::VecInt32>& partitions)
 {
    DT::VecInt32 partitionPeriods;
@@ -192,7 +192,7 @@ DT::VecInt32 PartitionBuilder::computePartitionPeriods(
 
 //----------------------------------------------------------------
 
-DT::Int32 PartitionBuilder::period(const DT::VecInt32& p)
+DT::Int32 NcSpecBuilder::period(const DT::VecInt32& p)
 {
    for (DT::Int32 x : possiblePartitionPeriods_) {
       DT::VecInt32 cyclicPermutation(p);
@@ -207,10 +207,8 @@ DT::Int32 PartitionBuilder::period(const DT::VecInt32& p)
 
 //----------------------------------------------------------------
 
-void PartitionBuilder::computeHighPartitions()
+void NcSpecBuilder::computeHighPartitions()
 {
-   auto repChecker = representativeChecker_;
-
 //     Positive k-partitions of n with nc_k > largestNcInMemory are bijective
 //     with (k-1)-compositions of (n - nc_k - (k-1)).
 
@@ -238,56 +236,7 @@ void PartitionBuilder::computeHighPartitions()
          c.push_back(ncLast);
          partitions.push_back(c);
       }
-
-//     Remove partitions that are not the representatives of their sets
-//     of cyclic permutations.
-
-      partitions.erase(
-          std::remove_if(partitions.begin(), partitions.end(),
-                         [&repChecker](const DT::VecInt32& v)
-                         {
-                            return (! repChecker->isRepresentative(v));
-                         }),
-          partitions.end());
-
-      highPartitions_.push_back(partitions);
    }
-}
-
-//----------------------------------------------------------------
-
-std::vector<DT::VecInt32> PartitionBuilder::getLowPartitions() const
-{
-   return std::vector<DT::VecInt32>(lowPartitions_);
-}
-
-//----------------------------------------------------------------
-
-std::vector<DT::VecInt32> PartitionBuilder::getInBetweenPartitions() const
-{
-   return std::vector<DT::VecInt32>(inBetweenPartitions_);
-}
-
-//----------------------------------------------------------------
-
-std::vector<std::vector<DT::VecInt32> >
-PartitionBuilder::getHighPartitions() const
-{
-   return std::vector<std::vector<DT::VecInt32> >(highPartitions_);
-}
-
-//----------------------------------------------------------------
-
-DT::VecInt32 PartitionBuilder::getInBetweenPartitionPeriods() const
-{
-   return DT::VecInt32(inBetweenPartitionPeriods_);
-}
-
-//----------------------------------------------------------------
-
-std::vector<DT::VecInt32> PartitionBuilder::getHighPartitionPeriods() const
-{
-   return std::vector<DT::VecInt32>(highPartitionPeriods_);
 }
 
 //----------------------------------------------------------------

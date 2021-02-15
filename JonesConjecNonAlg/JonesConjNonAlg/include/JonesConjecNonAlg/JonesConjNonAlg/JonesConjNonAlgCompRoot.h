@@ -15,10 +15,6 @@
 #include "KnotCommon/KnotGraph/ConwayLikeGraphFactory.h"
 #include "JonesConjecNonAlg/Polyh/PolyhManager.h"
 
-#include "JonesConjecNonAlg/PartialKnotSpec/RepresentativeChecker.h"
-#include "JonesConjecNonAlg/PartialKnotSpec/PartitionBuilder.h"
-#include "JonesConjecNonAlg/PartialKnotSpec/PartitionBuilderWrapper.h"
-
 #include "JonesConjecNonAlg/PartialKnotSpec/PartialKnotSpecManager.h"
 #include "JonesConjecNonAlg/JonesConjNonAlg/JonesConjNonAlgApp.h"
 

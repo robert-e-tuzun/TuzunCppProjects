@@ -1,6 +1,6 @@
 //----------------------------------------------------------------
 //
-//     Wrapper for partition builder for partial knot specs (implementation).
+//     Wrapper for nc spec builder for partial knot specs (implementation).
 //
 //     Bob Tuzun
 //
@@ -14,7 +14,7 @@
 #include <memory>
 #include <algorithm>
 
-#include "JonesConjecNonAlg/PartialKnotSpec/PartitionBuilderWrapper.h"
+#include "JonesConjecNonAlg/PartialKnotSpec/NcSpecBuilderWrapper.h"
 
 #include "JonesConjecNonAlg/BlkbdJonesConjNonAlg/BlkbdRunParamsNonAlg.h"
 #include "JonesConjecNonAlg/BlkbdJonesConjNonAlg/GetPointerRunParamsNonAlg.h"
@@ -26,15 +26,15 @@ namespace Jones_Conjec_NonAlg::Partial_Knot_Spec {
 
 //----------------------------------------------------------------
 
-PartitionBuilderWrapper::PartitionBuilderWrapper(
-       std::shared_ptr<I_PartitionBuilder> partitionBuilder)
-:partitionBuilder_(partitionBuilder)
+NcSpecBuilderWrapper::NcSpecBuilderWrapper(
+       std::shared_ptr<I_NcSpecBuilder> ncSpecBuilder)
+:ncSpecBuilder_(ncSpecBuilder)
 {
 }
 
 //----------------------------------------------------------------
 
-PartitionBuilderWrapper::~PartitionBuilderWrapper()
+NcSpecBuilderWrapper::~NcSpecBuilderWrapper()
 {
 }
 
@@ -43,23 +43,21 @@ PartitionBuilderWrapper::~PartitionBuilderWrapper()
 //     Prepare this object for use.
 //
 
-void PartitionBuilderWrapper::prepareForUse(
+void NcSpecBuilderWrapper::prepareForUse(
        std::shared_ptr<Tuzun_Util::I_Blackboard> blkbdPtr)
 {
    blkbdPtr_ = blkbdPtr;
 
    initRunParams();
 
-//     Compute partitions.
-
-   partitionBuilder_->prepareForUse(numCrossings_, numVertices_,
-                     largestSmallNc_, largestNcInMemory_, ncMaxAttainable_);
-   partitionBuilder_->computePartitions();
+   ncSpecBuilder_->prepareForUse(numCrossings_, numVertices_,
+             largestSmallNc_, largestNcInMemory_, ncMaxAttainable_,
+             numNcPartitionsStoredMax_);
 }
 
 //----------------------------------------------------------------
 
-void PartitionBuilderWrapper::initRunParams()
+void NcSpecBuilderWrapper::initRunParams()
 {
 //     Retrieve run parameters.
    std::shared_ptr<JCB::BlkbdRunParamsNonAlg> runParamI =
@@ -69,45 +67,46 @@ void PartitionBuilderWrapper::initRunParams()
    numVertices_ = runParamI->getNumVertices();
    largestSmallNc_ = runParamI->getLargestSmallNc();
    largestNcInMemory_ = runParamI->getLargestNcInMemory();
+   numNcPartitionsStoredMax_ = runParamI->getNumNcPartitionsStoredMax();
    ncMaxAttainable_ = runParamI->getNcMaxAttainable();
 }
 
 //----------------------------------------------------------------
 
-std::vector<DT::VecInt32> PartitionBuilderWrapper::getLowPartitions() const
+std::vector<DT::VecInt32> NcSpecBuilderWrapper::getLowPartitions() const
 {
-   return partitionBuilder_->getLowPartitions();
+   return ncSpecBuilder_->getLowPartitions();
 }
 
 //----------------------------------------------------------------
 
 std::vector<DT::VecInt32>
-PartitionBuilderWrapper::getInBetweenPartitions() const
+NcSpecBuilderWrapper::getInBetweenPartitions() const
 {
-   return partitionBuilder_->getInBetweenPartitions();
+   return ncSpecBuilder_->getInBetweenPartitions();
 }
 
 //----------------------------------------------------------------
 
 std::vector<std::vector<DT::VecInt32> >
-PartitionBuilderWrapper::getHighPartitions() const
+NcSpecBuilderWrapper::getHighPartitions() const
 {
-   return partitionBuilder_->getHighPartitions();
+   return ncSpecBuilder_->getHighPartitions();
 }
 
 //----------------------------------------------------------------
 
-DT::VecInt32 PartitionBuilderWrapper::getInBetweenPartitionPeriods() const
+DT::VecInt32 NcSpecBuilderWrapper::getInBetweenPartitionPeriods() const
 {
-   return partitionBuilder_->getInBetweenPartitionPeriods();
+   return ncSpecBuilder_->getInBetweenPartitionPeriods();
 }
 
 //----------------------------------------------------------------
 
 std::vector<DT::VecInt32>
-PartitionBuilderWrapper::getHighPartitionPeriods() const
+NcSpecBuilderWrapper::getHighPartitionPeriods() const
 {
-   return partitionBuilder_->getHighPartitionPeriods();
+   return ncSpecBuilder_->getHighPartitionPeriods();
 }
 
 //----------------------------------------------------------------

@@ -26,6 +26,7 @@ set(SOURCE_FILES
 set(HEADER_FILES
     include/TuzunUtil/Blackboard.h
     include/TuzunUtil/CppDatatypes.h
+    include/TuzunUtil/SortByRank.h
    )
 
 add_library(TuzunUtil STATIC ${SOURCE_FILES} ${HEADER_FILES})

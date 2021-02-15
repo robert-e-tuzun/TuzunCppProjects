@@ -27,6 +27,7 @@ class PolyhManager : public I_PolyhManager
       virtual DT::Int32 getNumPolyh();
       virtual bool shouldPerformCalcsForPolyhedron(DT::Int32 polyhNum);
       virtual void finishPreppingPolyhedron();
+      virtual bool polyhedronHasDnSymmetry();
 
    private:
       void initRunParams();

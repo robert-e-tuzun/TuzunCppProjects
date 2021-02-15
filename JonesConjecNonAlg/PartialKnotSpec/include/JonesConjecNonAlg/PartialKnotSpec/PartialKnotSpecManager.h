@@ -28,6 +28,9 @@ class PartialKnotSpecManager : public I_PartialKnotSpecManager
 
    private:
       void initRunParams();
+      void loopThroughPartialKnotSpecChunks();
+      void performDnSymmetrySpecificLooping();
+      void performGeneralSymmetryLooping();
 
       DT::Int32 curPolyhNum_;
       DT::Int32 numCrossings_;

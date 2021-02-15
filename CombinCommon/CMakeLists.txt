@@ -26,7 +26,7 @@ find_package(Boost REQUIRED)
 set(SOURCE_FILES
     src/KComposition.cpp
     src/BinomCoeffTable.cpp
-    src/findCompositionsWithFilter.cpp
+    src/buildSomeFilteredTransformedCompositions.cpp
     src/Speedometric.cpp
    )
 

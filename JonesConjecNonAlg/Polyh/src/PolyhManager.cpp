@@ -120,5 +120,13 @@ void PolyhManager::finishPreppingPolyhedron()
 
 //----------------------------------------------------------------
 
+bool PolyhManager::polyhedronHasDnSymmetry()
+{
+   return false;
+//     TODO: Implement polyhedronHasDnSymmetry.
+}
+
+//----------------------------------------------------------------
+
 } // namespace Jones_Conjec_NonAlg::Polyh
 

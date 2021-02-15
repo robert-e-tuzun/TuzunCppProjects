@@ -1,0 +1,231 @@
+//----------------------------------------------------------------
+//
+//     Nc partition chunk prepper for partial knot specs (implementation).
+//
+//     Bob Tuzun
+//
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <iomanip>
+#include <sstream>
+#include <vector>
+#include <memory>
+#include <algorithm>
+
+#include "CombinCommon/buildSomeFilteredTransformedCompositions.h"
+
+#include "MathCommon/integerFactorsOf.h"
+#include "JonesConjecNonAlg/PartialKnotSpec/NcPartitionChunkPrepper.h"
+
+namespace DT = Tuzun_Util::Datatypes;
+
+namespace Jones_Conjec_NonAlg::Partial_Knot_Spec {
+
+//----------------------------------------------------------------
+
+NcPartitionChunkPrepper::NcPartitionChunkPrepper()
+{
+}
+
+//----------------------------------------------------------------
+
+NcPartitionChunkPrepper::~NcPartitionChunkPrepper()
+{
+}
+
+//----------------------------------------------------------------
+
+void NcPartitionChunkPrepper::setParams(DT::Int32 numCrossings,
+       DT::Int32 numVertices, DT::Int32 maxNumNcPartitionsStored,
+       DT::Int32 largestSmallNc, DT::Int32 maxCyclicPermutationShift)
+{
+   numCrossings_ = numCrossings;
+   numVertices_ = numVertices;
+   maxNumNcPartitionsStored_ = maxNumNcPartitionsStored;
+   largestSmallNc_ = largestSmallNc;
+   maxCyclicPermutationShift_ = maxCyclicPermutationShift;
+}
+
+//----------------------------------------------------------------
+
+void NcPartitionChunkPrepper::setFilterFunction(DT::Int32 kForComposition,
+       DT::Int32 nForComposition, FilterFuncType filterFunction)
+{
+   kForComposition_ = kForComposition;
+   nForComposition_ = nForComposition;
+   filterFunction_ = filterFunction;
+}
+
+//----------------------------------------------------------------
+
+void NcPartitionChunkPrepper::setTransformationFunction(
+       TransformFuncType transformationFunction)
+{
+   transformationFunction_ = transformationFunction;
+}
+
+//----------------------------------------------------------------
+
+void NcPartitionChunkPrepper::setInitialStateAtBeginning()
+{
+//     Start at the beginning of the partition sequence.
+   prevComposition_ = { -1 };
+
+//     Required when we can have non-zero cyclic permutation shifts.
+   if (maxCyclicPermutationShift_ > 0)
+      computeCyclicPermutationShiftBoundaries();
+
+//     As a consequence of cyclic permutation shift = 0, will be
+//     necessary to generate next (first) chunk.
+   cyclicPermutationShift_ = 0;
+}
+
+//----------------------------------------------------------------
+
+void NcPartitionChunkPrepper::computeCyclicPermutationShiftBoundaries()
+{
+   cyclicPermutationShiftBoundaries_.clear();
+
+   DT::Int32 rMax = std::min((numCrossings_-numVertices_)/largestSmallNc_,
+                             numVertices_);
+   DT::VecInt32 factors = Math_Common::integerFactorsOf(numVertices_);
+   for (DT::Int32 r : factors)
+      if (r <= rMax)
+         cyclicPermutationShiftBoundaries_.push_back(numVertices_/r);
+
+   cyclicPermutationShiftBoundaries_.push_back(0);
+}
+
+//----------------------------------------------------------------
+
+void NcPartitionChunkPrepper::computeNextSetOfNcPartitions()
+{
+}
+
+//----------------------------------------------------------------
+
+void NcPartitionChunkPrepper::computeDnSymmetryPartitions()
+{
+//     k-partitions of n with largestSmallNc_ < max element <=
+//     largestNcInMemory_ and last element = max element and
+//     number of 1's does not exceed prescribed limit are bijective with
+//     k-compositions of (n-k) with largestSmallNc_ <= max element <
+//     largestNcInMemory_ and last element = max element and
+//     number of zeros in composition does not exceed prescribed limit.
+
+//     Using largestSmallNc in lambda prevents compile error.
+//     Similar for largestNcInMemory and maxNumAllowedNcEq1.
+   DT::Int32 largestSmallNc = largestSmallNc_;
+   DT::Int32 largestNcInMemory = largestNcInMemory_;
+   DT::Int32 maxNumAllowedNcEq1 = maxNumAllowedNcEq1_;
+
+   auto filterFunction = [largestSmallNc, largestNcInMemory, maxNumAllowedNcEq1]
+                         (const DT::VecInt32& v)
+           {
+              DT::Int32 numZeros = std::count(v.begin(), v.end(), 0);
+              if (numZeros > maxNumAllowedNcEq1)
+                 return false;
+
+              DT::Int32 maxElement = *std::max_element(v.begin(), v.end());
+              return ((largestSmallNc <= maxElement) &&
+                      (maxElement < largestNcInMemory) &&
+                      (maxElement == v.back()));
+           };
+
+//     Transformation function performs the bijection.
+   auto transformationFunction = [](const DT::VecInt32& v)
+           {
+              DT::VecInt32 w(v);
+              for (DT::Int32& x : w)
+                 x++;
+
+              return DT::VecInt32(w);
+           };
+
+   DT::Int32 k = numVertices_;
+   DT::Int32 n = numCrossings_ - numVertices_;
+
+   ncPartitions_ = Combin_Common::buildSomeFilteredTransformedCompositions(
+         k, n, numNcPartitionsStoredMax_, prevComposition_, filterFunction,
+         transformationFunction);
+
+   cyclicPermutationShift_ = 0;
+}
+
+//----------------------------------------------------------------
+
+void NcPartitionChunkPrepper::computeGeneralSymmetryPartitions()
+{
+   bool needToGeneratePartitions = (cyclicPermutationShift_ == numVertices_);
+   if (needToGeneratePartitions) {
+      computeBlockOfPartitions();
+      sortPartitionsByCyclicPermutationShift();
+   }
+
+   bool atCyclicPermutationShiftBoundary = ((cyclicPermutationShift != 0) &&
+       (std::find(cyclicPermutationShiftBoundaries.begin(),
+                  cyclicPermutationShiftBoundaries.end(),
+        cyclicPermutationShift_) != cyclicPermutationShiftBoundaries.end()));
+
+   cyclicPermutationShift_--;
+   if (atCyclicPermutationShiftBoundary)
+      sortSubsetOfPartitions();
+
+//     k-partitions of n with max element <= largestSmallNc_ are
+//     bijective with k-compositions of (n-k) with max element <=
+//     (largestSmallNc_-1).
+
+//     Using largestSmallNc in lambda prevents compile error.
+   DT::Int32 largestSmallNc = largestSmallNc_;
+
+   auto filterFunction = [largestSmallNc](const DT::VecInt32& v)
+           {
+              DT::Int32 maxElement = *std::max_element(v.begin(), v.end());
+              return (maxElement <= (largestSmallNc-1));
+           };
+
+//     Transformation function performs the bijection.
+   auto transformationFunction = [](const DT::VecInt32& v)
+           {
+              DT::VecInt32 w(v);
+              for (DT::Int32& x : w)
+                 x++;
+
+              return DT::VecInt32(w);
+           };
+
+   DT::Int32 k = numVertices_ - 1;
+   DT::Int32 n = numCrossings_ - largestSmallNc_ - (numVertices_ - 1);
+
+   ncPartitions_ = Combin_Common::buildSomeFilteredTransformedCompositions(
+         k, n, numNcPartitionsStoredMax_, prevComposition_, filterFunction,
+         transformationFunction);
+}
+
+//----------------------------------------------------------------
+
+DT::Int32 NcPartitionChunkPrepper::getCyclicPermutationShift()
+{
+   return cyclicPermutationShift_;
+}
+
+//----------------------------------------------------------------
+
+std::vector<DT::VecInt32> NcPartitionChunkPrepper::getNcSpecs()
+{
+   return ncPartitions_;
+}
+
+//----------------------------------------------------------------
+
+bool NcPartitionChunkPrepper::isDoneComputingNewNcSpecs()
+{
+   return doneComputingNewNcSpecs_;
+}
+
+//----------------------------------------------------------------
+
+} // namespace Jones_Conjec_NonAlg::Partial_Knot_Spec
+
