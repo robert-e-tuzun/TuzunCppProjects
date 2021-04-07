@@ -113,6 +113,14 @@ bool PolyhManager::shouldPerformCalcsForPolyhedron(DT::Int32 polyhNum)
 
 //----------------------------------------------------------------
 
+bool PolyhManager::polyhAdmitsKnotsForCts(const DT::VecInt32& setOfCt)
+{
+   DT::Int32 numLoops = polyhGraph_->numLoopsForCts(setOfCt);
+   return (numLoops == 1);
+}
+
+//----------------------------------------------------------------
+
 void PolyhManager::finishPreppingPolyhedron()
 {
 //     TODO: Implement finishPreppingPolyhedron.

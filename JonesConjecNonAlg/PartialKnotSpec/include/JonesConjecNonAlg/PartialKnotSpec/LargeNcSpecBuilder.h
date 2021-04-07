@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------
 //
-//     Medium nc specification builder for partial knot specs.
+//     Large nc specification builder for partial knot specs.
 //
 //     Bob Tuzun
 //
@@ -10,17 +10,17 @@
 #include <functional>
 
 #include "JonesConjecNonAlg/PartialKnotSpec/I_RepresentativeChecker.h"
-#include "JonesConjecNonAlg/PartialKnotSpec/I_MediumNcSpecBuilder.h"
+#include "JonesConjecNonAlg/PartialKnotSpec/I_LargeNcSpecBuilder.h"
 
 namespace DT = Tuzun_Util::Datatypes;
 
 namespace Jones_Conjec_NonAlg::Partial_Knot_Spec {
 
-class MediumNcSpecBuilder : public I_MediumNcSpecBuilder
+class LargeNcSpecBuilder : public I_LargeNcSpecBuilder
 {
    public:
-      MediumNcSpecBuilder(std::shared_ptr<I_RepresentativeChecker> repChecker);
-      ~MediumNcSpecBuilder();
+      LargeNcSpecBuilder(std::shared_ptr<I_RepresentativeChecker> repChecker);
+      ~LargeNcSpecBuilder();
 
       virtual void prepareForUse(const NcSpecBuildInfo& info);
 
@@ -43,7 +43,7 @@ class MediumNcSpecBuilder : public I_MediumNcSpecBuilder
 
       DT::Int32 cyclicPermutationShift_;
       DT::Int32 largestSmallNc_;
-      DT::Int32 largestNcInMemory_;
+      DT::Int32 ncLast_;
       DT::Int32 maxAllowedNumNcEq1_;
       DT::Int32 maxPeriod_;
       DT::Int32 numCrossings_;

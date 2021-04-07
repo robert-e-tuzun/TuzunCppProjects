@@ -48,6 +48,7 @@ void MediumNcSpecManager::findNextNcChunk()
    mediumNcSpecBuilder_->findNextNcChunk();
    ncChunk_ = mediumNcSpecBuilder_->getNcChunk();
    cyclicPermutationShift_ = mediumNcSpecBuilder_->getCyclicPermutationShift();
+   numNcSpecs_ = ncChunk_.size();
    done_ = mediumNcSpecBuilder_->isDone();
 }
 

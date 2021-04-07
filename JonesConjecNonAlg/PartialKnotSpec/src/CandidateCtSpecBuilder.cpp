@@ -105,27 +105,15 @@ void CandidateCtSpecBuilder::replace2Or3With23Or123()
 
 void CandidateCtSpecBuilder::setUpSpeedoForV(const DT::VecInt32& v)
 {
+   DT::VecInt32 minDigitsForCt = { 1, 2, 1 };
+   DT::VecInt32 maxDigitsForCt = { 1, 3, 3 };
+
    DT::VecInt32 minDigits;
    DT::VecInt32 maxDigits;
 
-   for (DT::Int32 entry : v) {
-      if (entry == 1) {
-         minDigits.push_back(1);
-         maxDigits.push_back(1);
-      }
-      else if (entry == 2) {
-         minDigits.push_back(2);
-         maxDigits.push_back(3);
-      }
-      else if (entry == 3) {
-         minDigits.push_back(1);
-         maxDigits.push_back(3);
-      }
-      else {
-         std::cout << "Illegal v in CandidateCtSpecBuilder::setUpSpeedoForV"
-                   << std::endl;
-         abort();
-      }
+   for (DT::Int32 ct : v) {
+      minDigits.push_back(minDigitsForCt[ct-1]);
+      maxDigits.push_back(maxDigitsForCt[ct-1]);
    }
 
    speedo_ = Combin_Common::Speedometric(minDigits, maxDigits);
@@ -137,7 +125,7 @@ void CandidateCtSpecBuilder::addToCandidateCtSpecs()
 {
    speedo_.goToBeginning();
 
-   bool done = 0;
+   bool done = false;
    do {
       speedo_.findNextSpeedo();
       DT::VecInt32 ctSpec = speedo_.getCurDigits();

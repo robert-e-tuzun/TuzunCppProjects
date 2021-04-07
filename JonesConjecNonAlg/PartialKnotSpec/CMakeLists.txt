@@ -9,9 +9,12 @@ set(SOURCE_FILES
 #    src/NcSpecBuilderWrapper.cpp
     src/SmallNcSpecBuilder.cpp
     src/SmallNcSpecManager.cpp
+    src/LargeNcSpecBuilder.cpp
+    src/LargeNcSpecManager.cpp
     src/MediumNcSpecBuilder.cpp
     src/MediumNcSpecManager.cpp
-#    src/CandidateCtSpecBuilder.cpp
+    src/CandidateCtSpecBuilder.cpp
+    src/CtSpecFilter.cpp
    )
 
 add_library(PartialKnotSpec ${SOURCE_FILES})

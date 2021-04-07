@@ -18,6 +18,7 @@ struct NcSpecBuildInfo
    DT::Int32 largestNcInMemory_;
    DT::Int32 largestSmallNc_;
    DT::Int32 maxAllowedNumNcEq1_;
+   DT::Int32 ncLast_;
    DT::Int32 ncMaxAttainable_;
    DT::Int32 numCrossings_;
    DT::Int32 numNcPartitionsStoredMax_;

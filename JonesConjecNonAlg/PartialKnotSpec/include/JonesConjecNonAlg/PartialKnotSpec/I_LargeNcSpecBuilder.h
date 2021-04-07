@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------
 //
-//     Medium nc specification builder for partial knot specs (interface
+//     Large nc specification builder for partial knot specs (interface
 //     class).
 //
 //     Bob Tuzun
@@ -8,15 +8,19 @@
 
 #pragma once
 
+#include <vector>
+
 #include "NcSpecItems.h"
 
 namespace DT = Tuzun_Util::Datatypes;
 
 namespace Jones_Conjec_NonAlg::Partial_Knot_Spec {
 
-class I_MediumNcSpecBuilder
+class I_LargeNcSpecBuilder
 {
    public:
+      virtual ~I_LargeNcSpecBuilder() {};
+
       virtual void prepareForUse(const NcSpecBuildInfo& info) = 0;
 
 //     Perform work of computing nc partitions.
@@ -25,7 +29,6 @@ class I_MediumNcSpecBuilder
 //     Retrieve results.
       virtual std::vector<DT::VecInt32> getNcChunk() const = 0;
       virtual DT::Int32 getCyclicPermutationShift() const = 0;
-      virtual bool atLastNcChunk() const = 0;
       virtual bool isDone() const = 0;
 };
 

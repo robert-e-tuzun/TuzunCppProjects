@@ -44,15 +44,12 @@ void LargeNcSpecManager::prepareForUse(const NcSpecBuildInfo& info)
 
 void LargeNcSpecManager::findNextNcChunk()
 {
-   do {
-      largeNcSpecBuilder_->findNextNcChunk();
-      ncChunk_ = largeNcSpecBuilder_->getNcChunk();
-      cyclicPermutationShift_ =
-           largeNcSpecBuilder_->getCyclicPermutationShift();
-      numNcSpecs_ = largeNcSpecBuilder_->getNumNcSpecs();
-      atLastNcChunk_ = largeNcSpecBuilder_->atLastNcChunk();
-   }
-   while (ncChunk_.empty() && (! atLastNcChunk_));
+   largeNcSpecBuilder_->findNextNcChunk();
+   ncChunk_ = largeNcSpecBuilder_->getNcChunk();
+   cyclicPermutationShift_ =
+        largeNcSpecBuilder_->getCyclicPermutationShift();
+   numNcSpecs_ = ncChunk_.size();
+   done_ = largeNcSpecBuilder_->isDone();
 }
 
 //----------------------------------------------------------------
@@ -78,9 +75,9 @@ DT::Int32 LargeNcSpecManager::getNumNcSpecs() const
 
 //----------------------------------------------------------------
 
-bool LargeNcSpecManager::atLastNcChunk() const
+bool LargeNcSpecManager::isDone() const
 {
-   return atLastNcChunk_;
+   return done_;
 }
 
 //----------------------------------------------------------------

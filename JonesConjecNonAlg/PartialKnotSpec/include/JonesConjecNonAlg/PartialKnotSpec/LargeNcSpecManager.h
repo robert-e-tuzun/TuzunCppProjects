@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "JonesConjecNonAlg/PartialKnotSpec/I_LargeNcSpecBuilder.h"
 #include "JonesConjecNonAlg/PartialKnotSpec/SomeSizeNcSpecManager.h"
 
 namespace DT = Tuzun_Util::Datatypes;
@@ -17,7 +18,7 @@ class LargeNcSpecManager : public SomeSizeNcSpecManager
 {
    public:
       LargeNcSpecManager(
-         std::shared_ptr<I_LargeNcSpecBuilder>& largeNcSpecBuilder);
+         std::shared_ptr<I_LargeNcSpecBuilder> largeNcSpecBuilder);
       ~LargeNcSpecManager();
 
       virtual void prepareForUse(const NcSpecBuildInfo& info);
@@ -29,17 +30,17 @@ class LargeNcSpecManager : public SomeSizeNcSpecManager
       virtual std::vector<DT::VecInt32> getNcChunk() const;
       virtual DT::Int32 getCyclicPermutationShift() const;
       virtual DT::Int32 getNumNcSpecs() const;
-      virtual bool atLastNcChunk() const;
+      virtual bool isDone() const;
 
    private:
       DT::Int32 cyclicPermutationShift_;
       DT::Int32 numNcSpecs_;
 
-      bool atLastNcChunk_;
+      bool done_;
 
       std::vector<DT::VecInt32> ncChunk_;
 
-      std::shared_ptr<I_SmallNcSpecBuilder> largeNcSpecBuilder_;
+      std::shared_ptr<I_LargeNcSpecBuilder> largeNcSpecBuilder_;
 };
 
 } // namespace Jones_Conjec_NonAlg::Partial_Knot_Spec

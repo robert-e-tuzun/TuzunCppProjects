@@ -24,6 +24,7 @@ class I_PolyhManager
           std::shared_ptr<Tuzun_Util::I_Blackboard> blkbdPtr) = 0;
       virtual DT::Int32 getNumPolyh() = 0;
       virtual bool shouldPerformCalcsForPolyhedron(DT::Int32 polyhNum) = 0;
+      virtual bool polyhAdmitsKnotsForCts(const DT::VecInt32& setOfCt) = 0;
       virtual void finishPreppingPolyhedron() = 0;
       virtual bool polyhedronHasDnSymmetry() = 0;
 
